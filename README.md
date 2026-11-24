@@ -8,11 +8,13 @@ To write a program to implement the the Logistic Regression Model to Predict the
 2. Anaconda – Python 3.7 Installation / Jupyter notebook
 
 ## Algorithm
-1. 
-2. 
-3. 
-4. 
+1.Load and preprocess the dataset by checking missing values and encoding categorical variables into numerical values.
 
+2.Separate features and target, remove unnecessary columns, and split the dataset into training and testing sets.
+
+3.Scale the features, train the Logistic Regression model using the training data, and predict placement status for the test data.
+
+4.Evaluate the model using Accuracy, Confusion Matrix, and Classification Report. 
 ## Program:
 ```
 /*
@@ -20,45 +22,84 @@ Program to implement the the Logistic Regression Model to Predict the Placement 
 Developed by: RANTHIYA S
 RegisterNumber:212225230225
 import pandas as pd
-import numpy as np
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
-data = pd.read_csv("placement.csv")
-data['status'] = data['status'].map({
-    'Placed': 1,
-    'Not Placed': 0
-})
-X = data[['ssc_p', 'mba_p']]
-y = data['status']
+df = pd.read_csv("Placement_Data.csv")
+print("First 5 Records:")
+print(df.head())
+# Check Missing Values
+print("\nMissing Values:")
+print(df.isnull().sum())
+# Encode Categorical Columns
+le = LabelEncoder()
+categorical_columns = [
+    'gender',
+    'ssc_b',
+    'hsc_b',
+    'hsc_s',
+    'degree_t',
+    'workex',
+    'specialisation',
+    'status'
+]
+
+for col in categorical_columns:
+    df[col] = le.fit_transform(df[col])
+
+
+# Separate Features and Target
+
+X = df.drop(["sl_no", "status", "salary"], axis=1)
+y = df["status"]
+
+
+# Train-Test Split
+
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
+    X,
+    y,
+    test_size=0.2,
+    random_state=42
 )
+
+# Feature Scaling
+
 scaler = StandardScaler()
+
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
-model = LogisticRegression()
+
+# Train Logistic Regression Model
+
+model = LogisticRegression(max_iter=1000)
+
 model.fit(X_train, y_train)
+
+# Prediction
 y_pred = model.predict(X_test)
-print("Accuracy:", accuracy_score(y_test, y_pred))
-print("\nConfusion Matrix:")
+
+
+# Accuracy
+accuracy = accuracy_score(y_test, y_pred)
+
+print("\nAccuracy =", accuracy)
+
+# Confusion Matrix
+
+print("\nConfusion Matrix")
 print(confusion_matrix(y_test, y_pred))
-print("\nClassification Report:")
+
+# Classification Report
+
+print("\nClassification Report")
 print(classification_report(y_test, y_pred))
-new_student = np.array([[70, 75]])
-
-new_student_scaled = scaler.transform(new_student)
-
-prediction = model.predict(new_student_scaled)
-
-print("\nPredicted Placement Status:",
-      "Placed" if prediction[0] == 1 else "Not Placed")
 */
 ```
 
 ## Output:
-<img width="807" height="527" alt="image" src="https://github.com/user-attachments/assets/222a9c68-dd14-4c47-b267-21edc54bf890" />
+<img width="676" height="843" alt="image" src="https://github.com/user-attachments/assets/33ac6a72-3917-4f5f-98c5-454d00e65c34" />
 
 
 
