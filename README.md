@@ -20,86 +20,68 @@ To write a program to implement the the Logistic Regression Model to Predict the
 /*
 Program to implement the the Logistic Regression Model to Predict the Placement Status of Student.
 Developed by: RANTHIYA S
-RegisterNumber:212225230225
+RegisterNumber:  212225230225
+*/
+
+
+# Logistic Regression – Student Placement Prediction
+
+# Step 1: Import required libraries
 import pandas as pd
+import numpy as np
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
-df = pd.read_csv("Placement_Data.csv")
-print("First 5 Records:")
-print(df.head())
-# Check Missing Values
-print("\nMissing Values:")
-print(df.isnull().sum())
-# Encode Categorical Columns
+
+# Step 2: Load the dataset
+data = pd.read_csv("Placement_Data.csv")
+
+# Display first few rows
+print(data.head())
+
+# Step 3: Data Preprocessing
+
+# Drop serial number column (not useful for prediction)
+data.drop('sl_no', axis=1, inplace=True)
+
+# Fill missing salary values with 0
+data['salary'].fillna(0, inplace=True)
+
+# Convert categorical columns into numerical values
 le = LabelEncoder()
 categorical_columns = [
-    'gender',
-    'ssc_b',
-    'hsc_b',
-    'hsc_s',
-    'degree_t',
-    'workex',
-    'specialisation',
-    'status'
+    'gender', 'ssc_b', 'hsc_b', 'hsc_s',
+    'degree_t', 'workex', 'specialisation', 'status'
 ]
 
 for col in categorical_columns:
-    df[col] = le.fit_transform(df[col])
+    data[col] = le.fit_transform(data[col])
 
+# Step 4: Split features and target
+X = data.drop('status', axis=1)
+y = data['status']
 
-# Separate Features and Target
-
-X = df.drop(["sl_no", "status", "salary"], axis=1)
-y = df["status"]
-
-
-# Train-Test Split
-
+# Train-test split
 X_train, X_test, y_train, y_test = train_test_split(
-    X,
-    y,
-    test_size=0.2,
-    random_state=42
+    X, y, test_size=0.2, random_state=42
 )
 
-# Feature Scaling
-
-scaler = StandardScaler()
-
-X_train = scaler.fit_transform(X_train)
-X_test = scaler.transform(X_test)
-
-# Train Logistic Regression Model
-
+# Step 5: Train Logistic Regression model
 model = LogisticRegression(max_iter=1000)
-
 model.fit(X_train, y_train)
 
-# Prediction
+# Step 6: Prediction
 y_pred = model.predict(X_test)
 
-
-# Accuracy
-accuracy = accuracy_score(y_test, y_pred)
-
-print("\nAccuracy =", accuracy)
-
-# Confusion Matrix
-
-print("\nConfusion Matrix")
-print(confusion_matrix(y_test, y_pred))
-
-# Classification Report
-
-print("\nClassification Report")
-print(classification_report(y_test, y_pred))
-*/
+# Step 7: Evaluation
+print("\nAccuracy:", accuracy_score(y_test, y_pred))
+print("\nConfusion Matrix:\n", confusion_matrix(y_test, y_pred))
+print("\nClassification Report:\n", classification_report(y_test, y_pred))
 ```
-
 ## Output:
-<img width="676" height="843" alt="image" src="https://github.com/user-attachments/assets/33ac6a72-3917-4f5f-98c5-454d00e65c34" />
+<img width="747" height="284" alt="image" src="https://github.com/user-attachments/assets/ab939022-ff9c-480f-aea3-578ea892c604" />
+<img width="589" height="334" alt="image" src="https://github.com/user-attachments/assets/6a887532-28e0-4206-b8f1-97191617a88a" />
 
 
 
